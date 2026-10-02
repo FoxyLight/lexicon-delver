@@ -7,28 +7,42 @@ var word_buttons: Dictionary = {}
 var current_encounter: Dictionary = {}
 var current_encounter_id := "A"
 
-@onready var words_grid: GridContainer = $Margin/VBox/WordsGrid
-@onready var selection_label: Label = $Margin/VBox/SelectionLabel
-@onready var preview_label: Label = $Margin/VBox/PreviewPanel/PreviewLabel
-@onready var result_label: Label = $Margin/VBox/ResultLabel
-@onready var execute_button: Button = $Margin/VBox/Actions/ExecuteButton
-@onready var cancel_button: Button = $Margin/VBox/Actions/CancelButton
-@onready var reset_button: Button = $Margin/VBox/Actions/ResetButton
+@onready var encounter_selector: OptionButton = $Margin/RootVBox/Header/EncounterSelector
 
-var encounter_selector: OptionButton
-var encounter_label: Label
-var threat_label: Label
-var state_label: Label
-var lane_selector: OptionButton
-var trigger_button: Button
-var attack_button: Button
-var end_turn_button: Button
+@onready var encounter_title: Label = $Margin/RootVBox/Body/LeftColumn/EncounterPanel/VBox/EncounterTitle
+@onready var encounter_purpose: Label = $Margin/RootVBox/Body/LeftColumn/EncounterPanel/VBox/EncounterPurpose
+@onready var threat_label: Label = $Margin/RootVBox/Body/LeftColumn/EncounterPanel/VBox/ThreatLabel
+
+@onready var words_grid: GridContainer = $Margin/RootVBox/Body/LeftColumn/WordsPanel/VBox/WordsGrid
+
+@onready var selection_label: Label = $Margin/RootVBox/Body/LeftColumn/MergePanel/VBox/SelectionLabel
+@onready var preview_label: Label = $Margin/RootVBox/Body/LeftColumn/MergePanel/VBox/PreviewLabel
+@onready var result_label: Label = $Margin/RootVBox/Body/LeftColumn/MergePanel/VBox/ResultLabel
+
+@onready var execute_button: Button = $Margin/RootVBox/Body/LeftColumn/MergePanel/VBox/Actions/ExecuteButton
+@onready var cancel_button: Button = $Margin/RootVBox/Body/LeftColumn/MergePanel/VBox/Actions/CancelButton
+@onready var reset_button: Button = $Margin/RootVBox/Body/LeftColumn/MergePanel/VBox/Actions/ResetButton
+
+@onready var state_label: Label = $Margin/RootVBox/Body/RightColumn/CombatPanel/VBox/StateLabel
+
+@onready var lane_selector: OptionButton = $Margin/RootVBox/Body/RightColumn/EnemyPanel/VBox/LaneSelector
+@onready var advance_button: Button = $Margin/RootVBox/Body/RightColumn/EnemyPanel/VBox/AdvanceButton
+@onready var attack_button: Button = $Margin/RootVBox/Body/RightColumn/EnemyPanel/VBox/AttackButton
+@onready var end_turn_button: Button = $Margin/RootVBox/Body/RightColumn/EnemyPanel/VBox/EndTurnButton
 
 func _ready() -> void:
+    encounter_selector.add_item("A - Shared-Resource Readability")
+    encounter_selector.add_item("B - WALL versus TRAP")
+    encounter_selector.add_item("C - Mixed-Hand Tactical Allocation")
+    encounter_selector.item_selected.connect(_on_encounter_selected)
+
+    lane_selector.add_item("Left lane")
+    lane_selector.add_item("Right lane")
+
     for word in WordModel.WORDS:
         var button := Button.new()
         button.text = word
-        button.custom_minimum_size = Vector2(180, 58)
+        button.custom_minimum_size = Vector2(180, 50)
         button.pressed.connect(_on_word_pressed.bind(word))
         words_grid.add_child(button)
         word_buttons[word] = button
@@ -37,68 +51,11 @@ func _ready() -> void:
     cancel_button.pressed.connect(_on_cancel_pressed)
     reset_button.pressed.connect(_on_reset_pressed)
 
-    _build_cp3_controls()
-    _load_encounter("A")
-
-func _build_cp3_controls() -> void:
-    var separator := HSeparator.new()
-    $Margin/VBox.add_child(separator)
-
-    var selector_row := HBoxContainer.new()
-    selector_row.add_theme_constant_override("separation", 12)
-    $Margin/VBox.add_child(selector_row)
-
-    var selector_label := Label.new()
-    selector_label.text = "Encounter:"
-    selector_row.add_child(selector_label)
-
-    encounter_selector = OptionButton.new()
-    encounter_selector.add_item("A — Shared-Resource Readability")
-    encounter_selector.add_item("B — WALL versus TRAP")
-    encounter_selector.add_item("C — Mixed-Hand Tactical Allocation")
-    encounter_selector.item_selected.connect(_on_encounter_selected)
-    selector_row.add_child(encounter_selector)
-
-    encounter_label = Label.new()
-    encounter_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-    $Margin/VBox.add_child(encounter_label)
-
-    threat_label = Label.new()
-    threat_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-    $Margin/VBox.add_child(threat_label)
-
-    var combat_heading := Label.new()
-    combat_heading.text = "DETERMINISTIC COMBAT STATE"
-    combat_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    $Margin/VBox.add_child(combat_heading)
-
-    state_label = Label.new()
-    state_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-    $Margin/VBox.add_child(state_label)
-
-    var controls := HBoxContainer.new()
-    controls.add_theme_constant_override("separation", 12)
-    $Margin/VBox.add_child(controls)
-
-    lane_selector = OptionButton.new()
-    lane_selector.add_item("Left lane")
-    lane_selector.add_item("Right lane")
-    controls.add_child(lane_selector)
-
-    trigger_button = Button.new()
-    trigger_button.text = "Enemy Attempts Advance"
-    trigger_button.pressed.connect(_on_advance_pressed)
-    controls.add_child(trigger_button)
-
-    attack_button = Button.new()
-    attack_button.text = "Enemy Melee Attack (3)"
+    advance_button.pressed.connect(_on_advance_pressed)
     attack_button.pressed.connect(_on_attack_pressed)
-    controls.add_child(attack_button)
-
-    end_turn_button = Button.new()
-    end_turn_button.text = "End Enemy Turn"
     end_turn_button.pressed.connect(_on_end_turn_pressed)
-    controls.add_child(end_turn_button)
+
+    _load_encounter("A")
 
 func _on_encounter_selected(index: int) -> void:
     match index:
@@ -134,6 +91,7 @@ func _load_encounter(id: String) -> void:
 func _on_word_pressed(word: String) -> void:
     if model.select_word(word):
         result_label.text = ""
+
     _refresh()
 
 func _on_execute_pressed() -> void:
@@ -169,6 +127,7 @@ func _on_advance_pressed() -> void:
         result_label.text = combat.last_event
     else:
         var advanced := combat.attempt_enemy_advance(lane)
+
         result_label.text = "%s\nAdvance completed: %s" % [
             combat.last_event,
             "yes" if advanced else "no"
@@ -181,6 +140,7 @@ func _on_attack_pressed() -> void:
         result_label.text = combat.last_event
     else:
         var damage_taken := combat.receive_enemy_attack(3, true)
+
         result_label.text = "%s\nDamage reaching player HP: %d" % [
             combat.last_event,
             damage_taken
@@ -216,25 +176,24 @@ func _refresh() -> void:
     cancel_button.disabled = model.selected_words.is_empty()
 
     if not current_encounter.is_empty():
-        encounter_label.text = "Encounter %s — %s\n%s" % [
+        encounter_title.text = "Encounter %s: %s" % [
             current_encounter["id"],
             current_encounter["title"],
-            current_encounter["purpose"],
         ]
 
+        encounter_purpose.text = current_encounter["purpose"]
         threat_label.text = _threat_text()
 
-    if state_label != null:
-        state_label.text = _combat_state_text()
+    state_label.text = _combat_state_text()
 
 func _threat_text() -> String:
-    var lines: Array[String] = ["Threats:"]
+    var lines: Array[String] = []
 
     for threat in current_encounter["threats"]:
         var hidden_text := "hidden" if threat["hidden"] else "visible"
 
         lines.append(
-            "- %s: %d HP, %d armor, %s, lane %s, %d step(s), attack %d (%s); %s"
+            "%s\n%d HP | %d armor | %s | %s lane | %d step(s) | %d %s damage\n%s"
             % [
                 threat["name"],
                 threat["hp"],
@@ -248,18 +207,29 @@ func _threat_text() -> String:
             ]
         )
 
-    return "\n".join(lines)
+    return "\n\n".join(lines)
 
 func _combat_state_text() -> String:
     return (
-        "Enemy model: %d HP | %d armor | %s | delayed activations: %d\n"
-        + "Player: %d HP | %d temp armor | shield block: %d\n"
-        + "Left lane: wall %d turn(s) | trap %s\n"
-        + "Right lane: wall %d turn(s) | trap %s"
+        "ENEMY\n"
+        + "%d HP\n"
+        + "%d armor\n"
+        + "%s\n"
+        + "Delayed activations: %d\n\n"
+        + "PLAYER\n"
+        + "%d HP\n"
+        + "%d temporary armor\n"
+        + "Shield block: %d\n\n"
+        + "LEFT LANE\n"
+        + "Wall: %d turn(s)\n"
+        + "Trap: %s\n\n"
+        + "RIGHT LANE\n"
+        + "Wall: %d turn(s)\n"
+        + "Trap: %s"
     ) % [
         combat.enemy_hp,
         combat.enemy_armor,
-        "hidden" if combat.enemy_hidden else "revealed",
+        "Hidden" if combat.enemy_hidden else "Revealed",
         combat.enemy_delayed_activations,
         combat.player_hp,
         combat.player_temp_armor,

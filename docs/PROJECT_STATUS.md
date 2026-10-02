@@ -224,3 +224,35 @@ P0 verification:
 
 Next Evidence Source:
 Immutable Git identity for this exact P0 documentation state.
+## Interaction Presentation Pivot v0.1 - P1
+
+Status: CANDIDATE / AWAITING IMMUTABLE SHA
+
+Starting approved baseline:
+`c59cc6cbd3b04cd62ecb63d652638d289b749e0f`
+
+Implemented:
+- fullscreen startup
+- reorganized visual hierarchy
+- encounter/threat information separated from merge controls
+- available-word area grouped clearly
+- merge/preview/actions grouped clearly
+- combat state separated from enemy controls
+- spacing and scanability improved
+
+Verification:
+- Godot 4.7.2 import PASS
+- CP1 regression PASS
+- CP2 regression PASS
+- CP3 regression PASS
+- P1 HUMAN READABILITY PASS
+
+Scope integrity:
+- no word-construction redesign yet
+- no semantic or combat-rule changes
+- no encounter changes
+- no vocabulary changes
+- P2 remains unauthorized
+
+Next Evidence Source:
+Immutable Git identity for this exact tested P1 candidate.
