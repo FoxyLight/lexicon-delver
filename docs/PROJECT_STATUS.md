@@ -1,24 +1,24 @@
 # Lexicon Delver - Project Status
 
 Status: ACTIVE
-Phase: SPBT-O1 - Authority and Baseline Establishment
+Phase: Interactive Core Prototype v0.1 - CP0
 Work class: EXPLORE
 Onboarding modifier: EXISTING-PROJECT ONBOARDING
-Decision state: Drive authority establishment approved; Git source-history baseline not yet established
+Decision state: SPBT-O1 PASS / CLOSED; Interactive Core Prototype CP0 ACTIVE
 
 ## Current authoritative baseline
 Governing process: Standard Project Bootstrap Template v1.1.1
 Repository: FoxyLight/lexicon-delver
 Integration branch: main
-Immutable commit SHA: UNESTABLISHED
+Approved immutable baseline SHA: 4a8fcf863ea146bf7fdfa60be5243db44c89130f
 Local project folder: `C:\Users\jneal\Documents\Projects\lexicon-delver`
 Current gameplay authority: `LEXICON_DELVER_SPEC_v0.2.md`
 
 ## Active checkpoint
-Checkpoint: SPBT-O1 - Authority and Baseline Establishment
+Checkpoint: Interactive Core Prototype v0.1 - CP0
 Class: EXPLORE
-Purpose: Reconcile validated design evidence, establish Google Drive documentation authority, then establish the first trustworthy GitHub source-history baseline.
-Repository state: GitHub repository exists but is empty.
+Purpose: Establish the exact experiment baseline, branch identity, and approved plan mirror before any interactive implementation begins.
+Repository state: Approved main baseline exists at 4a8fcf863ea146bf7fdfa60be5243db44c89130f; experiment branch feature/interactive-core-v0.1 is active.
 Local state: the original 2026-09-24 pre-validation handoff package has been preserved under `docs/archive/2026-09-24-pre-validation/`; the local folder is not yet a Git repository.
 Status: ACTIVE
 
@@ -58,16 +58,43 @@ Manual / experiential:
 - Modifier expansion v0.1.1 incomplete and parked.
 
 Repository / provenance:
-- GitHub repository confirmed empty.
-- No authoritative Git SHA yet exists.
-- Local project folder confirmed not to contain `.git` metadata.
+- Approved baseline commit: `4a8fcf863ea146bf7fdfa60be5243db44c89130f`
+- GitHub repository: `FoxyLight/lexicon-delver`
+- Integration branch: `main`
+- Experiment branch: `feature/interactive-core-v0.1`
+- Local branch starts from the exact approved baseline.
 
 ## Blockers
-- None for authority establishment.
-- SPBT-O1 cannot close until first Git baseline exists, its immutable SHA is recorded, and human approval is explicit.
+- None for CP0.
+- CP1 remains unauthorized until CP0 verification and human approval.
 
 ## Next Evidence Source
-The reconciled local documentation package after Drive authority has been established.
+CP0 repository verification for `feature/interactive-core-v0.1` from approved baseline `4a8fcf863ea146bf7fdfa60be5243db44c89130f`.
 
 ## Next valid step
-Replace the active local governance/specification files with the reconciled authority package, mirror the current validation records, then initialize the local Git repository and establish the first `main` baseline.
+Complete CP0 documentation mirroring, commit and push the experiment branch, verify exact branch/SHA state, and stop for human approval before CP1.
+
+## Interactive Core Prototype v0.1
+
+Status: CP0 ACTIVE
+
+Approved plan:
+`LEXICON_DELVER_INTERACTIVE_CORE_PROTOTYPE_PLAN_v0.1.md`
+
+Work class:
+EXPLORE
+
+Starting approved baseline:
+`4a8fcf863ea146bf7fdfa60be5243db44c89130f`
+
+Experiment branch:
+`feature/interactive-core-v0.1`
+
+CP0 scope:
+- establish exact baseline identity
+- create experiment branch
+- mirror approved plan into repository documentation
+- record checkpoint state
+- no gameplay implementation
+
+CP1 is not authorized until CP0 is verified and explicitly closed.
