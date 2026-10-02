@@ -4,6 +4,8 @@ var model := WordModel.new()
 var combat := CombatModel.new()
 
 var word_buttons: Dictionary = {}
+var current_encounter: Dictionary = {}
+var current_encounter_id := "A"
 
 @onready var words_grid: GridContainer = $Margin/VBox/WordsGrid
 @onready var selection_label: Label = $Margin/VBox/SelectionLabel
@@ -13,6 +15,9 @@ var word_buttons: Dictionary = {}
 @onready var cancel_button: Button = $Margin/VBox/Actions/CancelButton
 @onready var reset_button: Button = $Margin/VBox/Actions/ResetButton
 
+var encounter_selector: OptionButton
+var encounter_label: Label
+var threat_label: Label
 var state_label: Label
 var lane_selector: OptionButton
 var trigger_button: Button
@@ -32,17 +37,40 @@ func _ready() -> void:
     cancel_button.pressed.connect(_on_cancel_pressed)
     reset_button.pressed.connect(_on_reset_pressed)
 
-    _build_cp2_controls()
-    _refresh()
+    _build_cp3_controls()
+    _load_encounter("A")
 
-func _build_cp2_controls() -> void:
+func _build_cp3_controls() -> void:
     var separator := HSeparator.new()
     $Margin/VBox.add_child(separator)
 
-    var heading := Label.new()
-    heading.text = "CP2 DETERMINISTIC COMBAT STATE"
-    heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    $Margin/VBox.add_child(heading)
+    var selector_row := HBoxContainer.new()
+    selector_row.add_theme_constant_override("separation", 12)
+    $Margin/VBox.add_child(selector_row)
+
+    var selector_label := Label.new()
+    selector_label.text = "Encounter:"
+    selector_row.add_child(selector_label)
+
+    encounter_selector = OptionButton.new()
+    encounter_selector.add_item("A — Shared-Resource Readability")
+    encounter_selector.add_item("B — WALL versus TRAP")
+    encounter_selector.add_item("C — Mixed-Hand Tactical Allocation")
+    encounter_selector.item_selected.connect(_on_encounter_selected)
+    selector_row.add_child(encounter_selector)
+
+    encounter_label = Label.new()
+    encounter_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    $Margin/VBox.add_child(encounter_label)
+
+    threat_label = Label.new()
+    threat_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    $Margin/VBox.add_child(threat_label)
+
+    var combat_heading := Label.new()
+    combat_heading.text = "DETERMINISTIC COMBAT STATE"
+    combat_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    $Margin/VBox.add_child(combat_heading)
 
     state_label = Label.new()
     state_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -71,6 +99,37 @@ func _build_cp2_controls() -> void:
     end_turn_button.text = "End Enemy Turn"
     end_turn_button.pressed.connect(_on_end_turn_pressed)
     controls.add_child(end_turn_button)
+
+func _on_encounter_selected(index: int) -> void:
+    match index:
+        0:
+            _load_encounter("A")
+        1:
+            _load_encounter("B")
+        2:
+            _load_encounter("C")
+
+func _load_encounter(id: String) -> void:
+    var encounter := EncounterCatalog.get_encounter(id)
+
+    if encounter.is_empty():
+        result_label.text = "Encounter could not be loaded."
+        return
+
+    current_encounter_id = id
+    current_encounter = encounter
+
+    model.reset()
+    combat.reset()
+
+    model.available_words.clear()
+    for word in encounter["available_words"]:
+        model.available_words.append(word)
+
+    combat.player_hp = encounter["player_hp"]
+
+    result_label.text = "Encounter %s loaded." % id
+    _refresh()
 
 func _on_word_pressed(word: String) -> void:
     if model.select_word(word):
@@ -101,10 +160,7 @@ func _on_cancel_pressed() -> void:
     _refresh()
 
 func _on_reset_pressed() -> void:
-    model.reset()
-    combat.reset()
-    result_label.text = "Prototype reset."
-    _refresh()
+    _load_encounter(current_encounter_id)
 
 func _on_advance_pressed() -> void:
     var lane := _selected_lane()
@@ -159,12 +215,44 @@ func _refresh() -> void:
     execute_button.disabled = not model.can_execute()
     cancel_button.disabled = model.selected_words.is_empty()
 
+    if not current_encounter.is_empty():
+        encounter_label.text = "Encounter %s — %s\n%s" % [
+            current_encounter["id"],
+            current_encounter["title"],
+            current_encounter["purpose"],
+        ]
+
+        threat_label.text = _threat_text()
+
     if state_label != null:
         state_label.text = _combat_state_text()
 
+func _threat_text() -> String:
+    var lines: Array[String] = ["Threats:"]
+
+    for threat in current_encounter["threats"]:
+        var hidden_text := "hidden" if threat["hidden"] else "visible"
+
+        lines.append(
+            "- %s: %d HP, %d armor, %s, lane %s, %d step(s), attack %d (%s); %s"
+            % [
+                threat["name"],
+                threat["hp"],
+                threat["armor"],
+                hidden_text,
+                threat["lane"],
+                threat["steps"],
+                threat["attack_damage"],
+                threat["attack_type"],
+                threat["timing"],
+            ]
+        )
+
+    return "\n".join(lines)
+
 func _combat_state_text() -> String:
     return (
-        "Enemy: %d HP | %d armor | %s | delayed activations: %d\n"
+        "Enemy model: %d HP | %d armor | %s | delayed activations: %d\n"
         + "Player: %d HP | %d temp armor | shield block: %d\n"
         + "Left lane: wall %d turn(s) | trap %s\n"
         + "Right lane: wall %d turn(s) | trap %s"

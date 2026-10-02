@@ -169,3 +169,34 @@ Scope integrity:
 
 Next Evidence Source:
 Immutable Git identity for this exact tested CP2 candidate.
+## CP3 - Three Curated Encounters
+
+Status: CANDIDATE / AWAITING IMMUTABLE SHA
+
+Starting approved baseline:
+`6d404f5d9a2b64f0a003434791d87cc9d0fa38cd`
+
+Implemented:
+- Encounter A: Shared-Resource Readability
+- Encounter B: WALL versus TRAP
+- Encounter C: Mixed-Hand Tactical Allocation
+- bounded encounter switching and reset
+- no new combat mechanics beyond CP2
+
+Verification:
+- Godot 4.7.2 import PASS
+- CP1 regression PASS
+- CP2 regression PASS
+- CP3 encounter-catalog tests PASS
+- CP3 HUMAN READABILITY PASS
+
+Scope integrity:
+- exactly three curated encounters
+- no CP4 experiential conclusion
+- no new vocabulary
+- THORN remains parked
+- no progression or metagame
+- no production systems
+
+Next Evidence Source:
+Immutable Git identity for this exact tested CP3 candidate.
