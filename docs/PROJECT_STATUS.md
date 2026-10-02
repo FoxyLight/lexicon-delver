@@ -134,3 +134,38 @@ Scope integrity:
 
 Next Evidence Source:
 Immutable Git identity for this exact tested CP1 candidate.
+## CP2 - Deterministic Combat Effect Layer
+
+Status: CANDIDATE / AWAITING IMMUTABLE SHA
+
+Starting approved baseline:
+`397894ca789c4a9dbeaac590e8f6eb3279af7880`
+
+Implemented primitives:
+- deterministic damage and armor interaction
+- reveal state
+- delayed / skipped activation
+- wall blocking and duration
+- shield blocking and retaliation
+- temporary armor
+- armor retaliation
+- one-shot lane traps
+- deterministic reset
+
+Verification:
+- Godot 4.7.2 import PASS
+- CP1 regression PASS
+- CP2 combat-model tests PASS
+- reset integrity PASS
+- CP2 HUMAN READABILITY PASS
+
+Scope integrity:
+- no curated encounters
+- no CP3 implementation
+- no new vocabulary
+- THORN remains parked
+- no progression
+- no production systems
+
+Next Evidence Source:
+Immutable Git identity for this exact tested CP2 candidate.
