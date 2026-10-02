@@ -98,3 +98,39 @@ CP0 scope:
 - no gameplay implementation
 
 CP1 is not authorized until CP0 is verified and explicitly closed.
+## CP1 - Word Interaction Shell
+
+Status: CANDIDATE / AWAITING IMMUTABLE SHA
+
+Authorized scope:
+- visible nine-word pool
+- first/second word selection
+- supported-pair validation
+- concise ability preview
+- cancel/reselect
+- minimal execute hook
+- immediate visible source-word consumption
+- reset restoring all words
+
+Automated verification:
+- Godot 4.7.2 project import PASS
+- supported pair validation PASS
+- click-order independence PASS
+- source-word consumption PASS
+- consumed-word reuse prevention PASS
+- unsupported pair blocking PASS
+- reset integrity PASS
+- LEXICON_DELVER_CP1_TESTS: PASS
+
+Manual verification:
+- CP1 HUMAN READABILITY PASS
+
+Scope integrity:
+- no combat encounter implementation
+- no CP2 combat primitives
+- no new vocabulary
+- THORN remains parked
+- no progression or production systems
+
+Next Evidence Source:
+Immutable Git identity for this exact tested CP1 candidate.
