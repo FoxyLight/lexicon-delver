@@ -200,3 +200,27 @@ Scope integrity:
 
 Next Evidence Source:
 Immutable Git identity for this exact tested CP3 candidate.
+## Interaction Presentation Pivot v0.1 - P0
+
+Status: CANDIDATE / AWAITING IMMUTABLE SHA
+
+Approved plan:
+LEXICON_DELVER_INTERACTION_PRESENTATION_PIVOT_PLAN_v0.1.md
+
+Starting approved baseline:
+`77403fe1efd805493e9cba758c69bcf137ac332d`
+
+Branch:
+`feature/interactive-core-v0.1`
+
+P0 verification:
+- exact starting SHA confirmed
+- branch confirmed
+- clean working tree confirmed before documentation changes
+- approved pivot plan mirrored into repository documentation
+- no gameplay implementation
+- no presentation implementation
+- P1 remains unauthorized
+
+Next Evidence Source:
+Immutable Git identity for this exact P0 documentation state.
